@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as dotenv from 'dotenv';
 import * as session from 'express-session';
 import { ConfigService } from './config/config.service';
 import { Logger } from '@nestjs/common';
@@ -14,10 +13,6 @@ async function bootstrap() {
     Logger.log('No NODE_ENV environment variable specified, exiting.');
     return;
   }
-
-  Logger.log(env);
-
-  dotenv.config({ path: `${env}.env` });
 
   const app = await NestFactory.create(AppModule);
   const configService: ConfigService = app.get(ConfigService);

@@ -18,16 +18,8 @@ export class ConfigService {
     // CMD DOS LINUX
     // ssh-keygen -t rsa -b 4096 -f jwtRS256.key
     // ssh-keygen -f jwtRS256.key.pub -e -m pkcs8 >  jwtRS256.key.pub.pem
-    const JWT_PUBLIC_KEY = fs.readFileSync(
-      './keys/jwtRS256.key.pub.pem',
-      'utf8',
-    );
-    const JWT_PRIVATE_KEY = fs.readFileSync('./keys/jwtRS256.key', 'utf8');
-    this.envConfig = this.validateInput({
-      ...config,
-      JWT_PUBLIC_KEY,
-      JWT_PRIVATE_KEY,
-    });
+
+    this.envConfig = this.validateInput(config);
   }
 
   //    Ensures all needed variables are set, and returns the validated JavaScript object
@@ -41,10 +33,10 @@ export class ConfigService {
       PORT: Joi.number().default(3000),
       API_AUTH_ENABLED: Joi.boolean().required(),
 
-      JWT_SECRET_KEY: Joi.string().required(),
-      JWT_EXPIRES_IN: Joi.number().required(),
       JWT_PRIVATE_KEY: Joi.string().required(),
       JWT_PUBLIC_KEY: Joi.string().required(),
+      JWT_SECRET_KEY: Joi.string().required(),
+      JWT_EXPIRES_IN: Joi.number().required(),
       JWT_ISSUER: Joi.string().required(),
       JWT_AUDIENCE: Joi.string().required(),
 
@@ -87,11 +79,15 @@ export class ConfigService {
   }
 
   public get jwtPublicKey(): string {
-    return this.envConfig.JWT_PUBLIC_KEY;
+    const path = `${process.env.HOME}/.ssh/${this.envConfig.JWT_PUBLIC_KEY}`;
+    const publicKey = fs.readFileSync(path, 'utf8');
+    return publicKey;
   }
 
   public get jwtPrivateKey(): string {
-    return this.envConfig.JWT_PRIVATE_KEY;
+    const path = `${process.env.HOME}/.ssh/${this.envConfig.JWT_PRIVATE_KEY}`;
+    const privateKey = fs.readFileSync(path, 'utf8');
+    return privateKey;
   }
 
   public get jwtAudience(): string {
