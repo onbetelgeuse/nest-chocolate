@@ -35,4 +35,3 @@ lerna-debug.log*
 environments/*.env
 privatekey
 publickey
-development.env
