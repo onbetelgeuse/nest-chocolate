@@ -2,5 +2,5 @@ export interface JwtPayload {
   id: number;
   username: string;
   email: string;
-  isSuperAdmin: boolean;
+  roles: string[];
 }

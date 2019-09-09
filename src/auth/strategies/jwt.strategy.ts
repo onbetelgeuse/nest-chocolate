@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   HttpException,
+  Logger,
 } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthService } from '../auth.service';
@@ -21,12 +22,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       audience: configService.jwtAudience,
       issuer: configService.jwtIssuer,
       algorithms: ['RS256'],
-      // secretOrKey: configService.jwtSecret,
     });
   }
 
   public async validate(payload: any) {
-    const user = await this.authService.validateUser(payload);
+    Logger.log(payload);
+    const user = await this.authService.validatePayload(payload);
     if (!user) {
       throw new HttpException('Wrong credentials', 401);
     }

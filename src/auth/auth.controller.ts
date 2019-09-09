@@ -9,6 +9,10 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../common/decorators/roles.decorator';
+import { CreateUserDto } from './dto/create.dto';
+import { AccessToken } from './interfaces/access-token.interface';
+import { RolesGuard } from '../common/guards/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -19,14 +23,22 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  public async login(@Request() req): Promise<any> {
+  public async login(@Request() req): Promise<AccessToken> {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(AuthGuard())
+  @Post('register')
+  public async register(
+    @Request() req,
+    @Body() user: CreateUserDto,
+  ): Promise<any> {
+    return this.authService.register(user);
+  }
+
   @Get('me')
+  @UseGuards(AuthGuard('jwt'))
+  @Roles('admin12')
   getProfile(@Request() req) {
-    this.logger.log('user', req.user);
     return req.user;
   }
 

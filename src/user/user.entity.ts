@@ -52,7 +52,7 @@ export class User {
   @IsBoolean()
   isSuperAdmin: boolean;
 
-  @ManyToMany(type => Role)
+  @ManyToMany(type => Role, cascade => ['insert'], { eager: true })
   @JoinTable({ name: 'user_role' })
   roles: Role[];
 

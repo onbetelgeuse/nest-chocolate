@@ -3,12 +3,15 @@ import {
   Injectable,
   HttpException,
   UnauthorizedException,
+  SetMetadata,
 } from '@nestjs/common';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '../config/config.service';
 import { User } from '../user/user.entity';
-import { ProfileUserDto } from '../user/dto/profile-user.dto';
+import { CreateUserDto } from './dto/create.dto';
+import { UserDto } from './../user/dto/user.dto';
+import { AccessToken } from './interfaces/access-token.interface';
 
 @Injectable()
 export class AuthService {
@@ -17,17 +20,21 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  public async login(user: any): Promise<any> {
+  public async login(user: UserDto): Promise<AccessToken> {
     const payload: JwtPayload = {
       id: user.id,
       username: user.username,
       email: user.email,
-      isSuperAdmin: user.isSuperAdmin,
+      roles: user.roles,
     };
     const token = await this.createToken(payload);
     const expiresIn = this.configService.jwtExpire;
 
     return { expiresIn, token };
+  }
+  @SetMetadata('roles', ['admin'])
+  public async register(user: CreateUserDto) {
+    return this.userService.create(user);
   }
 
   private async createToken(payload: JwtPayload): Promise<any> {
@@ -41,10 +48,10 @@ export class AuthService {
     return jwt.sign(payload, this.configService.jwtPrivateKey, signOptions);
   }
 
-  public async validateLocalUser(
+  public async validateUser(
     username: string,
     password: string,
-  ): Promise<User> {
+  ): Promise<UserDto> {
     let user: User = await this.userService.findOneByEmail(username);
 
     if (!user) {
@@ -56,27 +63,27 @@ export class AuthService {
 
     const passwordCorrect = user.verifyPassword(password);
     if (passwordCorrect) {
-      return user;
+      return UserDto.fromEntity(user);
     }
     throw new HttpException('Wrong credentials', 401);
   }
 
-  public async validateUser(payload: JwtPayload): Promise<User | undefined> {
+  public async validatePayload(payload: JwtPayload): Promise<User | undefined> {
     return this.userService.findOneById(payload.id);
   }
 
-  public async validateExternalUser(profile: any): Promise<User | undefined> {
-    if (!profile || !profile._json) {
-      throw new UnauthorizedException('Wrong credentials');
-    }
+  // public async validateExternalUser(profile: any): Promise<User | undefined> {
+  //   if (!profile || !profile._json) {
+  //     throw new UnauthorizedException('Wrong credentials');
+  //   }
 
-    const profileDto = ProfileUserDto.fromJson(profile._json);
-    let user: User = await this.userService.findOneByExternalId(profileDto.id);
+  //   const profileDto = ProfileUserDto.fromJson(profile._json);
+  //   let user: User = await this.userService.findOneByExternalId(profileDto.id);
 
-    if (!user) {
-      user = await this.userService.createfromExternal(profileDto);
-    }
+  //   if (!user) {
+  //     user = await this.userService.createfromExternal(profileDto);
+  //   }
 
-    return user;
-  }
+  //   return user;
+  // }
 }
