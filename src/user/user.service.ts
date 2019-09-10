@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Role } from './role.entity';
 import { CreateUserDto } from './../auth/dto/create.dto';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -13,21 +14,21 @@ export class UserService {
   ) {}
 
   public async findOneById(id: number): Promise<User | undefined> {
-    return await this.userRepository.findOne(id);
+    return this.userRepository.findOne(id);
   }
 
   public async findOneByUsername(username: string): Promise<User | undefined> {
-    return await this.userRepository.findOne({ username });
+    return this.userRepository.findOne({ username });
   }
 
   public async findOneByEmail(email: string): Promise<User | undefined> {
-    return await this.userRepository.findOne({ email });
+    return this.userRepository.findOne({ email });
   }
 
   public async findOneByExternalId(
     externalId: string,
   ): Promise<User | undefined> {
-    return await this.userRepository.findOne({ externalId });
+    return this.userRepository.findOne({ externalId });
   }
 
   // public async createfromExternal(
@@ -58,6 +59,6 @@ export class UserService {
       role.name = name;
       return role;
     });
-    return await this.userRepository.save(newUser);
+    return this.userRepository.save(newUser);
   }
 }

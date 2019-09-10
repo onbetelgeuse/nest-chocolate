@@ -1,13 +1,10 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  HttpException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthService } from '../auth.service';
 import { ConfigService } from '../../config/config.service';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { UserDto } from '../../user/dto/user.dto';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -25,12 +22,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  public async validate(payload: any) {
-    Logger.log(payload);
+  public async validate(payload: JwtPayload, done: VerifiedCallback) {
     const user = await this.authService.validatePayload(payload);
     if (!user) {
-      throw new HttpException('Wrong credentials', 401);
+      done(new HttpException('Wrong credentials', 401), false);
     }
-    return user;
+
+    done(null, UserDto.fromEntity(user), payload.iat);
   }
 }

@@ -28,16 +28,13 @@ export class AuthController {
   }
 
   @Post('register')
-  public async register(
-    @Request() req,
-    @Body() user: CreateUserDto,
-  ): Promise<any> {
+  public async register(@Body() user: CreateUserDto): Promise<any> {
     return this.authService.register(user);
   }
 
   @Get('me')
-  @UseGuards(AuthGuard('jwt'))
-  @Roles('admin12')
+  @Roles('admin')
+  @UseGuards(AuthGuard(), RolesGuard)
   getProfile(@Request() req) {
     return req.user;
   }
