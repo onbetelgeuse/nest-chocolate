@@ -34,10 +34,10 @@ export class OpenIdConnectStrategy extends PassportStrategy(Strategy) {
     profile: any,
     done: (err: any, user: any) => void,
   ) {
-    const user = await this.authService.validateExternalUser(profile);
-    if (!user) {
-      return done(new UnauthorizedException(), false);
-    }
-    done(null, user);
+    // const user = await this.authService.validateExternalUser(profile);
+    // if (!user) {
+    //   return done(new UnauthorizedException(), false);
+    // }
+    // done(null, user);
   }
 }

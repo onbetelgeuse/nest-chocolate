@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 @Injectable()
 export class LoginUserDto {
   @IsString()
-  @IsEmail({ require_tld: false })
+  @IsNotEmpty()
   readonly username: string;
 
   @IsString()

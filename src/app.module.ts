@@ -5,7 +5,6 @@ import { ConfigModule } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AccountModule } from './account/account.module';
 import { CommonModule } from './common/common.module';
 
 @Module({
@@ -13,7 +12,6 @@ import { CommonModule } from './common/common.module';
     ConfigModule,
     AuthModule,
     UserModule,
-    AccountModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -24,7 +22,6 @@ import { CommonModule } from './common/common.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    AccountModule,
     CommonModule,
   ],
   controllers: [AppController],

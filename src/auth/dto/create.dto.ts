@@ -1,6 +1,6 @@
-import { IsString, IsEmail, IsNotEmpty, IsBoolean } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, IsArray } from 'class-validator';
 
-export class RegisterUserDto {
+export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   readonly username: string;
@@ -21,6 +21,6 @@ export class RegisterUserDto {
   @IsEmail({ require_tld: false })
   readonly email: string;
 
-  @IsBoolean()
-  readonly isSuperAdmin?: boolean;
+  @IsArray()
+  readonly roles: string[];
 }

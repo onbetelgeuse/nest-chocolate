@@ -36,9 +36,18 @@ export class ConfigService {
       JWT_PRIVATE_KEY: Joi.string().required(),
       JWT_PUBLIC_KEY: Joi.string().required(),
       JWT_SECRET_KEY: Joi.string().required(),
-      JWT_EXPIRES_IN: Joi.number().required(),
+      JWT_EXPIRES_IN: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .required(),
       JWT_ISSUER: Joi.string().required(),
       JWT_AUDIENCE: Joi.string().required(),
+
+      DB_TYPE: Joi.string().required(),
+      DB_HOST: Joi.string().required(),
+      DB_PORT: Joi.number().required(),
+      DB_USER: Joi.string().required(),
+      DB_PASSWORD: Joi.string().required(),
+      DB_DATABASE: Joi.string().required(),
 
       LDAP_SERVER_URL: Joi.string().required(),
       LDAP_BIND_DN: Joi.string().required(),
@@ -96,6 +105,10 @@ export class ConfigService {
 
   public get jwtIssuer(): string {
     return this.envConfig.JWT_ISSUER;
+  }
+
+  public getDatabase(): string {
+    return this.envConfig.DB_DATABASE;
   }
 
   public get ldapAuthOptions(): LdapAuthOptions {
