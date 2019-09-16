@@ -83,7 +83,11 @@ export class ConfigService {
     return this.envConfig.JWT_SECRET_KEY;
   }
 
-  public get jwtExpire(): number {
+  public get jwtExpire(): number | string {
+    if (!isNaN(parseInt(this.envConfig.JWT_EXPIRES_IN, 10))) {
+      return this.envConfig.JWT_EXPIRES_IN;
+    }
+    console.log(Number(this.envConfig.JWT_EXPIRES_IN));
     return Number(this.envConfig.JWT_EXPIRES_IN);
   }
 

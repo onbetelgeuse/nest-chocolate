@@ -12,6 +12,7 @@ import { User } from '../user/user.entity';
 import { CreateUserDto } from './dto/create.dto';
 import { UserDto } from './../user/dto/user.dto';
 import { AccessToken } from './interfaces/access-token.interface';
+import { AuthUtil } from './auth.util';
 
 @Injectable()
 export class AuthService {
@@ -28,8 +29,7 @@ export class AuthService {
       roles: user.roles,
     };
     const token = await this.createToken(payload);
-    const expiresIn = this.configService.jwtExpire;
-
+    const expiresIn = AuthUtil.toIntervalNumber(this.configService.jwtExpire);
     return { expiresIn, token };
   }
   @SetMetadata('roles', ['admin'])

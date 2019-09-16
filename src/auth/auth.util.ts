@@ -14,18 +14,18 @@ export class AuthUtil {
   }
 
   public static toIntervalNumber(value: string | number): number | undefined {
-    let interval;
+    let interval: number;
+    const pattern = /^\d+$/;
 
     if (isNumber(value)) {
-      return value;
-    }
-    if (isString(value)) {
-      interval = parseInt(value, 10);
-      if (isNaN(interval)) {
+      interval = value;
+    } else if (isString(value)) {
+      if (pattern.test(value)) {
+        interval = parseInt(value, 10);
+      } else {
         interval = ms(value) / 1000;
       }
-      return interval;
     }
-    return undefined;
+    return interval;
   }
 }
