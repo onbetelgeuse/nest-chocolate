@@ -52,11 +52,13 @@ describe('AuthService', () => {
       const expiresIn = 3600;
       const iss = 'http://call-me';
       const aud = 'http://myserver';
+      const algorithm: string = 'RS256';
 
       when(configService.jwtPrivateKey).thenReturn(privatekey);
       when(configService.jwtExpire).thenReturn(expiresIn);
       when(configService.jwtAudience).thenReturn(aud);
       when(configService.jwtIssuer).thenReturn(iss);
+      when(configService.jwtAlgorithm).thenReturn(algorithm);
       const user: UserDto = new UserDto(
         1,
         'username',
@@ -71,7 +73,7 @@ describe('AuthService', () => {
         issuer: iss,
         audience: aud,
         expiresIn,
-        algorithm: ['RS256'],
+        algorithm: [algorithm],
       };
       const userVerified = jwt.verify(
         result.token,

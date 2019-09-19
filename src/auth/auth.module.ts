@@ -27,9 +27,9 @@ import { LocalStrategy } from './strategies/local.strategy';
         secretOrPrivateKey: config.jwtPrivateKey,
         signOptions: {
           expiresIn: config.jwtExpire,
-          // audience: config.jwtAudience,
-          // issuer: config.jwtIssuer,
-          algorithm: 'RS256',
+          audience: config.jwtAudience,
+          issuer: config.jwtIssuer,
+          algorithm: config.jwtAlgorithm,
         },
       }),
       inject: [ConfigService],

@@ -1,10 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import {
-  Injectable,
-  HttpException,
-  UnauthorizedException,
-  SetMetadata,
-} from '@nestjs/common';
+import { Injectable, HttpException, SetMetadata } from '@nestjs/common';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '../config/config.service';
@@ -39,12 +34,12 @@ export class AuthService {
 
   private async createToken(payload: JwtPayload): Promise<any> {
     const signOptions: jwt.SignOptions = {
-      algorithm: 'RS256',
+      algorithm: this.configService.jwtAlgorithm,
       expiresIn: this.configService.jwtExpire,
       audience: this.configService.jwtAudience,
       issuer: this.configService.jwtIssuer,
+      jwtid: AuthUtil.jitGenerate(),
     };
-
     return jwt.sign(payload, this.configService.jwtPrivateKey, signOptions);
   }
 

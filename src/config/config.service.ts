@@ -41,6 +41,7 @@ export class ConfigService {
         .required(),
       JWT_ISSUER: Joi.string().required(),
       JWT_AUDIENCE: Joi.string().required(),
+      JWT_ALGORITHM: Joi.string().required(),
 
       DB_TYPE: Joi.string().required(),
       DB_HOST: Joi.string().required(),
@@ -87,7 +88,6 @@ export class ConfigService {
     if (!isNaN(parseInt(this.envConfig.JWT_EXPIRES_IN, 10))) {
       return this.envConfig.JWT_EXPIRES_IN;
     }
-    console.log(Number(this.envConfig.JWT_EXPIRES_IN));
     return Number(this.envConfig.JWT_EXPIRES_IN);
   }
 
@@ -101,6 +101,10 @@ export class ConfigService {
     const path = `${process.env.HOME}/.ssh/${this.envConfig.JWT_PRIVATE_KEY}`;
     const privateKey = fs.readFileSync(path, 'utf8');
     return privateKey;
+  }
+
+  public get jwtAlgorithm(): string {
+    return this.envConfig.JWT_ALGORITHM;
   }
 
   public get jwtAudience(): string {

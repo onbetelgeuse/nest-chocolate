@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { isNumber, isString } from '../common/common.util';
 import * as ms from 'ms';
+import * as uuid from 'uuid';
 
 const BCRYPT_SALT_ROUNDS = 16;
 
@@ -27,5 +28,9 @@ export class AuthUtil {
       }
     }
     return interval;
+  }
+
+  public static jitGenerate(): string {
+    return uuid.v1();
   }
 }

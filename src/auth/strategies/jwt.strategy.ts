@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: configService.jwtPublicKey,
       audience: configService.jwtAudience,
       issuer: configService.jwtIssuer,
-      algorithms: ['RS256'],
+      algorithms: [configService.jwtAlgorithm],
     });
   }
 
