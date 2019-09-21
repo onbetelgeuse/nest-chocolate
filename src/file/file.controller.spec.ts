@@ -1,15 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { FileController } from './file.controller';
+import { FileService } from './file.service';
+import { mock, instance } from 'ts-mockito';
 
 describe('File Controller', () => {
   let controller: FileController;
+  let fileService: FileService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [FileController],
-    }).compile();
+    fileService = mock(FileService);
 
-    controller = module.get<FileController>(FileController);
+    controller = new FileController(instance(fileService));
   });
 
   it('should be defined', () => {

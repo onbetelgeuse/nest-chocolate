@@ -64,6 +64,11 @@ export class ConfigService {
       OIDC_CLIENT_ID: Joi.string().required(),
       OIDC_CLIENT_SECRET: Joi.string().required(),
       OIDC_CALLBACK_URL: Joi.string().required(),
+
+      OWMA_URL: Joi.string().required(),
+      OWMA_VERSION: Joi.string().required(),
+      OWMA_APIKEY: Joi.string().required(),
+      OWMA_APIKEY2: Joi.string().required(),
     });
 
     const { error, value: validatedEnvConfig } = Joi.validate(
@@ -117,6 +122,21 @@ export class ConfigService {
 
   public getDatabase(): string {
     return this.envConfig.DB_DATABASE;
+  }
+
+  public get getOwmaUrl(): string {
+    return this.envConfig.OWMA_URL;
+  }
+
+  public get getOwmaVersion(): string {
+    return this.envConfig.OWMA_VERSION;
+  }
+
+  public get getOwmaApiKey(): string {
+    return this.envConfig.OWMA_APIKEY;
+  }
+  public get getOwmaApiKey2(): string {
+    return this.envConfig.OWMA_APIKEY2;
   }
 
   public get ldapAuthOptions(): LdapAuthOptions {

@@ -15,10 +15,10 @@ async function bootstrap() {
   }
 
   const app = await NestFactory.create(AppModule);
+
   const configService: ConfigService = app.get(ConfigService);
   const port = configService.get('PORT');
 
-  app.enableCors();
   // app.use(
   //   session({
   //     resave: false,
@@ -28,6 +28,8 @@ async function bootstrap() {
   // );
 
   app.setGlobalPrefix(BASE_PATH);
+  app.enableCors();
+
   await app.listen(port);
   Logger.log(`Listening on http://localhost:${port}`);
 }

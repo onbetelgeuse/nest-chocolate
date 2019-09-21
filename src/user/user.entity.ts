@@ -5,6 +5,7 @@ import {
   Entity,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import {
   IsBoolean,
@@ -15,6 +16,7 @@ import {
 } from 'class-validator';
 import { AuthUtil } from '../auth/auth.util';
 import { Role } from './role.entity';
+import { Token } from '../tokens/token.entity';
 
 @Injectable()
 @Entity('user')
@@ -55,6 +57,9 @@ export class User {
   @ManyToMany(type => Role, cascade => ['insert'], { eager: true })
   @JoinTable({ name: 'user_role' })
   roles: Role[];
+
+  @OneToMany(type => Token, token => token.user, { onDelete: 'CASCADE' })
+  tokens: Token[];
 
   public setPassword(password: string) {
     if (password) {
