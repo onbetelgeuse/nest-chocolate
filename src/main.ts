@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as session from 'express-session';
 import { ConfigService } from './config/config.service';
 import { Logger } from '@nestjs/common';
+import * as bodyParser from 'body-parser';
 
 export const BASE_PATH = 'api';
 
@@ -15,6 +16,7 @@ async function bootstrap() {
   }
 
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
 
   const configService: ConfigService = app.get(ConfigService);
   const port = configService.get('PORT');
@@ -26,9 +28,10 @@ async function bootstrap() {
   //     saveUninitialized: true,
   //   }),
   // );
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
   app.setGlobalPrefix(BASE_PATH);
-  app.enableCors();
 
   await app.listen(port);
   Logger.log(`Listening on http://localhost:${port}`);
