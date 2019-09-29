@@ -28,8 +28,8 @@ async function bootstrap() {
   //     saveUninitialized: true,
   //   }),
   // );
-  app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+  app.use(bodyParser.json({ limit: '90mb' }));
+  app.use(bodyParser.urlencoded({ limit: '90mb', extended: true }));
 
   app.setGlobalPrefix(BASE_PATH);
 
