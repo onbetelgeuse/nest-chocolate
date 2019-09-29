@@ -23,7 +23,6 @@ export class EventsGateway
   }
 
   public handleConnection(client: Client, ...args: any[]) {
-    this.logger.log(args);
     this.logger.log(`Client connected: ${client.id}`);
   }
 

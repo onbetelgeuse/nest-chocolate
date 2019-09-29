@@ -53,7 +53,7 @@ export class UserService {
     newUser.lastName = user.lastName;
     newUser.setPassword(user.password);
     newUser.externalId = null;
-    newUser.roles = user.roles.map(name => {
+    newUser.roles = (user.roles || []).map(name => {
       const role = new Role();
       role.name = name;
       return role;

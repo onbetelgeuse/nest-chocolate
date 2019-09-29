@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
-import { FileModule } from './file/file.module';
+import { FileModule } from './files/file.module';
 import { TokensModule } from './tokens/tokens.module';
 import { EventsModule } from './events/events.module';
 import { OwmaModule } from './owma/owma.module';

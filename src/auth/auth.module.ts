@@ -23,7 +23,6 @@ import { LocalStrategy } from './strategies/local.strategy';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        // secret: config.jwtSecret,
         secretOrPrivateKey: config.jwtPrivateKey,
         signOptions: {
           expiresIn: config.jwtExpire,

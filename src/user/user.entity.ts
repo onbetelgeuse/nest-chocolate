@@ -17,7 +17,7 @@ import {
 import { AuthUtil } from '../auth/auth.util';
 import { Role } from './role.entity';
 import { Token } from '../tokens/token.entity';
-
+import { File } from '../files/file.entity';
 @Injectable()
 @Entity('user')
 export class User {
@@ -50,7 +50,7 @@ export class User {
   @MaxLength(200)
   externalId?: string;
 
-  @Column()
+  @Column({ default: false })
   @IsBoolean()
   isSuperAdmin: boolean;
 
@@ -72,4 +72,7 @@ export class User {
   public verifyPassword(data: string): boolean {
     return AuthUtil.verifyPassword(data, this.password);
   }
+
+  @OneToMany(type => File, file => file.user)
+  files: File[];
 }

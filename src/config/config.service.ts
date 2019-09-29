@@ -69,6 +69,8 @@ export class ConfigService {
       OWMA_VERSION: Joi.string().required(),
       OWMA_APIKEY: Joi.string().required(),
       OWMA_APIKEY2: Joi.string().required(),
+
+      MULTER_DEST: Joi.string().required(),
     });
 
     const { error, value: validatedEnvConfig } = Joi.validate(
