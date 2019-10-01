@@ -3,6 +3,7 @@ import { FileRepository } from './file.repository';
 import { File } from './file.entity';
 import { User } from '../user/user.entity';
 import { FileDto } from './dto/file.dto';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class FilesService {
@@ -13,20 +14,27 @@ export class FilesService {
     return this.fileRepository.findAllByUserId(userId);
   }
 
+  public async findOneByUserId(
+    userId: number,
+    filename: string,
+  ): Promise<File> {
+    return this.fileRepository.findOneByUserId(userId, filename);
+  }
+
+  public async deleteOneByUserId(
+    userId: number,
+    filename: string,
+  ): Promise<DeleteResult> {
+    return this.fileRepository.deleteOneByUserId(userId, filename);
+  }
+
   public async saveAllByUserId(
     userId: number,
     files: FileDto[],
   ): Promise<File[]> {
     const entities: File[] = files.map(file => {
       const entity = new File();
-      entity.filename = file.filename;
-      entity.destination = file.destination;
-      entity.encoding = file.encoding;
-      entity.fieldname = file.fieldname;
-      entity.mimetype = file.mimetype;
-      entity.originalname = file.originalname;
-      entity.path = file.path;
-      entity.size = file.size;
+      Object.assign(entity, file);
       entity.user = new User();
       entity.user.id = userId;
       return entity;
