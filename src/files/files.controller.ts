@@ -10,6 +10,7 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -19,20 +20,37 @@ import { User } from '../common/decorators/user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import * as fs from 'fs';
+import { ConfigService } from '../config/config.service';
 
 @Controller('files')
 export class FilesController {
   private readonly logger = new Logger('FileController');
-  constructor(private readonly filesService: FilesService) {}
+  constructor(
+    private readonly filesService: FilesService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('/upload')
   @UseGuards(AuthGuard())
   @UseInterceptors(FilesInterceptor('file', 20))
-  public async uploadFile(
+  public async uploadFiles(
     @UploadedFiles() files: FileDto[],
     @User('id') userId: number,
   ) {
     return this.filesService.saveAllByUserId(userId, files);
+  }
+
+  @Get('/download/:filename')
+  @UseGuards(AuthGuard())
+  public async downloadFile(
+    @User('id') id: number,
+    @Param('filename') filename: string,
+    @Res() res,
+  ) {
+    const file = await this.filesService.findOneByUserId(id, filename);
+    return res.sendFile(file.filename, {
+      root: this.configService.get('MULTER_DEST'),
+    });
   }
 
   @Get()
