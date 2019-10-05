@@ -83,8 +83,8 @@ export class ConfigService {
     return validatedEnvConfig;
   }
 
-  public get(key: string): string {
-    return this.envConfig[key];
+  public get<T extends string | number | boolean = string>(key: string): T {
+    return this.envConfig[key] as T;
   }
 
   public get jwtSecret(): string {

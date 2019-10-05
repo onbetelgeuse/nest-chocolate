@@ -10,6 +10,8 @@ import { FileModule } from './files/file.module';
 import { TokensModule } from './tokens/tokens.module';
 import { EventsModule } from './events/events.module';
 import { OwmaModule } from './owma/owma.module';
+import { ConfigService } from './config/config.service';
+import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
 
 @Module({
   imports: [
@@ -18,17 +20,21 @@ import { OwmaModule } from './owma/owma.module';
     UserModule,
     TokensModule,
     EventsModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'chocolate',
-      password: 'chocolate',
-      database: 'chocolate',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      logging: ['info', 'log'],
-      logger: 'advanced-console',
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        type: 'postgres' as 'postgres',
+        host: config.get('DB_HOST'),
+        port: config.get<number>('DB_PORT'),
+        username: config.get('DB_USER'),
+        password: config.get('DB_PASSWORD'),
+        database: config.get('DB_DATABASE'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true,
+        logging: ['info', 'log'] as LoggerOptions,
+        // logger: 'advanced-console',
+      }),
     }),
     CommonModule,
     FileModule,
