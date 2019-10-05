@@ -10,6 +10,7 @@ import { FileRepository } from './file.repository';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([FileRepository]),
     MulterModule.registerAsync({
       imports: [ConfigModule],
