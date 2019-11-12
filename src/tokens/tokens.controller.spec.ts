@@ -1,13 +1,13 @@
 import { TokensController } from './tokens.controller';
-import { TokensService } from './tokens.service';
+import { TokenService } from './token.service';
 import { mock, instance } from 'ts-mockito';
 
 describe('Tokens Controller', () => {
   let controller: TokensController;
-  let service: TokensService;
+  let service: TokenService;
 
   beforeEach(async () => {
-    service = mock(TokensService);
+    service = mock(TokenService);
 
     controller = new TokensController(instance(service));
   });

@@ -10,10 +10,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '../config/config.service';
 import { OpenIdConnectStrategy } from './strategies/openidconnect.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { TokenModule } from '../tokens/token.module';
 
 @Module({
   imports: [
     ConfigModule,
+    TokenModule,
     PassportModule.register({
       defaultStrategy: 'jwt',
       property: 'user',

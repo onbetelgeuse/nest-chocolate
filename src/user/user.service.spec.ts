@@ -1,7 +1,7 @@
 import { UserService } from './user.service';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { mock, instance, when, verify, anything } from 'ts-mockito';
+import { mock, instance, when, verify, anything, deepEqual } from 'ts-mockito';
 import { Logger } from '@nestjs/common';
 
 class UserRepository extends Repository<User> {}
@@ -31,11 +31,15 @@ describe('UserService', () => {
       user.firstName = 'firstName' + userId;
       user.lastName = 'lastName' + userId;
 
-      when(repository.findOne(userId)).thenResolve(user);
+      when(
+        repository.findOne(userId, deepEqual({ relations: ['roles'] })),
+      ).thenResolve(user);
       // execute
       const result: User = await service.findOneById(userId);
       // verify
-      verify(repository.findOne(anything())).once();
+      verify(
+        repository.findOne(anything(), deepEqual({ relations: ['roles'] })),
+      ).once();
       expect(result).toBeTruthy();
       expect(result.id).toBe(userId);
       expect(result).toStrictEqual(user);
@@ -51,11 +55,15 @@ describe('UserService', () => {
       user.lastName = 'lastName' + userId;
       const username: string = user.username;
 
-      when(repository.findOne(anything())).thenResolve(user);
+      when(
+        repository.findOne(anything(), deepEqual({ relations: ['roles'] })),
+      ).thenResolve(user);
       // execute
       const result: User = await service.findOneByUsername(username);
       // verify
-      verify(repository.findOne(anything())).once();
+      verify(
+        repository.findOne(anything(), deepEqual({ relations: ['roles'] })),
+      ).once();
       expect(result).toBeTruthy();
       expect(result.username).toBe(username);
       expect(result).toStrictEqual(user);

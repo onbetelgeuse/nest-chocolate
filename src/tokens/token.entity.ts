@@ -5,6 +5,7 @@ import {
   Column,
   UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 
@@ -13,14 +14,12 @@ export class Token {
   @PrimaryColumn()
   id: string;
 
-  @Column({ nullable: false })
-  audience: string;
+  @Column()
+  userId: number;
 
   @ManyToOne(type => User, user => user.tokens, { nullable: false })
-  user: number;
-
-  @Column({ nullable: false })
-  accessToken: string;
+  @JoinColumn({ name: 'userId' })
+  user: User;
 
   @CreateDateColumn()
   createdAt: string;
@@ -29,5 +28,5 @@ export class Token {
   updatedAt: string;
 
   @Column({ nullable: false, default: false })
-  isRevoked: boolean;
+  revoked: boolean;
 }

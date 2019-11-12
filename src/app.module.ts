@@ -7,7 +7,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { FileModule } from './files/file.module';
-import { TokensModule } from './tokens/tokens.module';
+import { TokenModule } from './tokens/token.module';
 import { EventsModule } from './events/events.module';
 import { OwmaModule } from './owma/owma.module';
 import { ConfigService } from './config/config.service';
@@ -18,7 +18,7 @@ import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
     ConfigModule,
     AuthModule,
     UserModule,
-    TokensModule,
+    TokenModule,
     EventsModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -31,9 +31,10 @@ import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        subscribers: [__dirname + '/**/*.subscriber{.ts,.js}'],
         synchronize: true,
-        logging: ['info', 'log'] as LoggerOptions,
-        // logger: 'advanced-console',
+        logging: ['info', 'log', 'query', 'error', 'schema'] as LoggerOptions,
+        logger: 'advanced-console' as 'advanced-console',
       }),
     }),
     CommonModule,

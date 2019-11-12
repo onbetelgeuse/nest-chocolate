@@ -24,10 +24,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   public async validate(payload: JwtPayload, done: VerifiedCallback) {
     const user = await this.authService.validatePayload(payload);
-    if (!user) {
+    if (!user || !user.active) {
       done(new HttpException('Wrong credentials', 401), false);
     }
-
     done(null, UserDto.fromEntity(user), payload.iat);
   }
 }

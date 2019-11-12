@@ -50,15 +50,15 @@ export class User {
   @MaxLength(200)
   externalId?: string;
 
-  @Column({ default: false })
+  @Column({ default: true })
   @IsBoolean()
-  isSuperAdmin: boolean;
+  active: boolean;
 
-  @ManyToMany(type => Role, cascade => ['insert'], { eager: true })
+  @ManyToMany(type => Role, role => role.users)
   @JoinTable({ name: 'user_role' })
   roles: Role[];
 
-  @OneToMany(type => Token, token => token.user, { onDelete: 'CASCADE' })
+  @OneToMany(type => Token, token => token.user)
   tokens: Token[];
 
   public setPassword(password: string) {

@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TokensController } from './tokens.controller';
-import { TokensService } from './tokens.service';
+import { TokenService } from './token.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Token } from './token.entity';
+import { TokenSubscriber } from './token.subscriber';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Token])],
   controllers: [TokensController],
-  providers: [TokensService],
-  exports: [TokensService],
+  providers: [TokenSubscriber, TokenService],
+  exports: [TokenService],
 })
-export class TokensModule {}
+export class TokenModule {}

@@ -8,6 +8,7 @@ export class UserDto {
     public lastName: string,
     public email: string,
     public roles: string[],
+    public active: boolean,
     public externalId?: string,
   ) {}
 
@@ -19,6 +20,7 @@ export class UserDto {
       user.lastName,
       user.email,
       user.roles ? user.roles.map(x => x.name) : [],
+      user.active,
       user.externalId,
     );
   }

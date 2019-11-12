@@ -13,15 +13,15 @@ export class UserService {
   ) {}
 
   public async findOneById(id: number): Promise<User | undefined> {
-    return this.userRepository.findOne(id);
+    return this.userRepository.findOne(id, { relations: ['roles'] });
   }
 
   public async findOneByUsername(username: string): Promise<User | undefined> {
-    return this.userRepository.findOne({ username });
+    return this.userRepository.findOne({ username }, { relations: ['roles'] });
   }
 
   public async findOneByEmail(email: string): Promise<User | undefined> {
-    return this.userRepository.findOne({ email });
+    return this.userRepository.findOne({ email }, { relations: ['roles'] });
   }
 
   public async findOneByExternalId(

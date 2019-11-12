@@ -1,5 +1,11 @@
 import * as jwt from 'jsonwebtoken';
-import { Injectable, HttpException, SetMetadata } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  SetMetadata,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '../config/config.service';
@@ -8,12 +14,16 @@ import { CreateUserDto } from './dto/create.dto';
 import { UserDto } from './../user/dto/user.dto';
 import { AccessToken } from './interfaces/access-token.interface';
 import { AuthUtil } from './auth.util';
+import { TokenService } from '../tokens/token.service';
+import { TokenDto } from '../tokens/dto/token.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger: Logger = new Logger(AuthService.name);
   constructor(
     private configService: ConfigService,
     private readonly userService: UserService,
+    private readonly tokenService: TokenService,
   ) {}
 
   public async login(user: UserDto): Promise<AccessToken> {
@@ -40,6 +50,11 @@ export class AuthService {
       issuer: this.configService.jwtIssuer,
       jwtid: AuthUtil.jitGenerate(),
     };
+    const token: TokenDto = new TokenDto({
+      id: signOptions.jwtid,
+      userId: payload.id,
+    });
+    await this.tokenService.add(token);
     return jwt.sign(payload, this.configService.jwtPrivateKey, signOptions);
   }
 
@@ -56,6 +71,10 @@ export class AuthService {
       }
     }
 
+    if (!user.active) {
+      throw new UnauthorizedException();
+    }
+
     const passwordCorrect = user.verifyPassword(password);
     if (passwordCorrect) {
       return UserDto.fromEntity(user);
@@ -64,6 +83,7 @@ export class AuthService {
   }
 
   public async validatePayload(payload: JwtPayload): Promise<User | undefined> {
+    // const token: Token = tokenService.
     return this.userService.findOneById(payload.id);
   }
 

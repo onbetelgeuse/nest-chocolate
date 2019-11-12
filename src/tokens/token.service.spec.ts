@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TokensService } from './tokens.service';
+import { TokenService } from './token.service';
 import { TokenRepository } from './token.repository';
 import { mock, instance } from 'ts-mockito';
 
 describe('TokensService', () => {
-  let service: TokensService;
+  let service: TokenService;
   let repository: TokenRepository;
 
   beforeEach(async () => {
     repository = mock(TokenRepository);
-    service = new TokensService(instance(repository));
+    service = new TokenService(instance(repository));
   });
 
   it('should be defined', () => {
