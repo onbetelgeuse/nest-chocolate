@@ -22,10 +22,10 @@ export class Token {
   user: User;
 
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: string;
+  updatedAt: Date;
 
   @Column({ nullable: false, default: false })
   revoked: boolean;

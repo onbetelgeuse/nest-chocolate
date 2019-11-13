@@ -3,12 +3,13 @@ import { TokensController } from './tokens.controller';
 import { TokenService } from './token.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Token } from './token.entity';
-import { TokenSubscriber } from './token.subscriber';
+import { ScheduleModule } from 'nest-schedule';
+import { TokenScheduleService } from './token-schedule.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Token])],
+  imports: [TypeOrmModule.forFeature([Token]), ScheduleModule.register({})],
   controllers: [TokensController],
-  providers: [TokenSubscriber, TokenService],
+  providers: [TokenService, TokenScheduleService],
   exports: [TokenService],
 })
 export class TokenModule {}

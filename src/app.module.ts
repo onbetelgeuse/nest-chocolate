@@ -31,7 +31,6 @@ import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        subscribers: [__dirname + '/**/*.subscriber{.ts,.js}'],
         synchronize: true,
         logging: ['info', 'log', 'query', 'error', 'schema'] as LoggerOptions,
         logger: 'advanced-console' as 'advanced-console',
