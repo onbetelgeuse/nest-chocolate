@@ -6,6 +6,7 @@ import {
   Logger,
   Get,
   Request,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -13,6 +14,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { CreateUserDto } from './dto/create.dto';
 import { AccessToken } from './interfaces/access-token.interface';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { Response, response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -23,8 +25,14 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  public async login(@Request() req): Promise<AccessToken> {
-    return this.authService.login(req.user);
+  public async login(@Request() req: any, @Res() res: Response): Promise<void> {
+    const accessToken: AccessToken = await this.authService.login(req.user);
+    res.cookie('AccessToken', accessToken, {
+      httpOnly: true,
+      maxAge: accessToken.expiresIn * 1000,
+    });
+
+    res.send(accessToken);
   }
 
   @Post('register')

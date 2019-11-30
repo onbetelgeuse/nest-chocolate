@@ -15,7 +15,7 @@ export class TokenScheduleService implements OnModuleInit {
   public async onModuleInit() {
     this.schedule.scheduleCronJob(
       'cleanup_token',
-      '0 */2 * * * *',
+      '0 0 */4 * * 1-5',
       async (): Promise<boolean> => {
         const deleteResult: DeleteResult = await this.tokenService.cleanup();
         this.logger.log(deleteResult.affected + ' row(s) deleted');

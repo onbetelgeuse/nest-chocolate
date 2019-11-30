@@ -12,6 +12,7 @@ import { EventsModule } from './events/events.module';
 import { OwmaModule } from './owma/owma.module';
 import { ConfigService } from './config/config.service';
 import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
+import { ImportModule } from './import/import.module';
 
 @Module({
   imports: [
@@ -36,9 +37,11 @@ import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
         logger: 'advanced-console' as 'advanced-console',
       }),
     }),
+
     CommonModule,
     FileModule,
     OwmaModule,
+    ImportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

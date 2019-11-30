@@ -1,9 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as session from 'express-session';
 import { ConfigService } from './config/config.service';
 import { Logger } from '@nestjs/common';
+import * as session from 'express-session';
 import * as bodyParser from 'body-parser';
+import * as csurf from 'csurf';
+import * as helmet from 'helmet';
+import * as cookieParser from 'cookie-parser';
 
 export const BASE_PATH = 'api';
 
@@ -21,15 +24,18 @@ async function bootstrap() {
   const configService: ConfigService = app.get(ConfigService);
   const port = configService.get('PORT');
 
-  // app.use(
-  //   session({
-  //     resave: false,
-  //     secret: configService.jwtSecret,
-  //     saveUninitialized: true,
-  //   }),
-  // );
+  app.use(
+    session({
+      resave: false,
+      secret: configService.jwtSecret,
+      saveUninitialized: true,
+    }),
+  );
   app.use(bodyParser.json({ limit: '90mb' }));
-  app.use(bodyParser.urlencoded({ limit: '90mb', extended: true }));
+  app.use(bodyParser.urlencoded({ limit: '90mb', extended: false }));
+  app.use(cookieParser());
+  app.use(helmet());
+  // app.use(csurf({ cookie: true }));
 
   app.setGlobalPrefix(BASE_PATH);
 

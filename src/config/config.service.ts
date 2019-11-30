@@ -71,6 +71,9 @@ export class ConfigService {
       OWMA_APIKEY2: Joi.string().required(),
 
       MULTER_DEST: Joi.string().required(),
+
+      REDIS_HOST: Joi.string().default('localhost'),
+      REDIS_PORT: Joi.number().default(6379),
     });
 
     const { error, value: validatedEnvConfig } = Joi.validate(

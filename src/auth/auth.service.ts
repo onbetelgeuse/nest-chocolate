@@ -2,7 +2,6 @@ import * as jwt from 'jsonwebtoken';
 import {
   Injectable,
   HttpException,
-  SetMetadata,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -37,8 +36,9 @@ export class AuthService {
     const expiresIn = AuthUtil.toIntervalNumber(this.configService.jwtExpire);
     return { expiresIn, token };
   }
-  @SetMetadata('roles', ['admin'])
+
   public async register(user: CreateUserDto) {
+    Object.assign(user, { roles: ['USER'] });
     return this.userService.create(user);
   }
 
