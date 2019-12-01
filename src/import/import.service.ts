@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import { InjectQueue } from 'nest-bull';
 import { Queue } from 'bull';
 import { IMPORT_CSV_QUEUE } from './import.constants';
+import Bull = require('bull');
 
 @Injectable()
 export class ImportService {
@@ -16,5 +17,9 @@ export class ImportService {
       .pipe(csv({ separator: ';' }))
       .on('data', async data => await this.queue.add('postalCode', data))
       .on('end', () => this.logger.log('Finish'));
+  }
+
+  public async getJobCounts(): Promise<Bull.JobCounts> {
+    return this.queue.getJobCounts();
   }
 }
