@@ -4,11 +4,12 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { InjectQueue, Processor } from 'nest-bull';
 import { Queue } from 'bull';
+import { IMPORT_CSV_QUEUE } from './import.constants';
 
 @Injectable()
 export class ImportService {
   private readonly logger: Logger = new Logger(ImportService.name);
-  constructor(@InjectQueue('import_csv') private readonly queue: Queue) {}
+  constructor(@InjectQueue(IMPORT_CSV_QUEUE) private readonly queue: Queue) {}
   public importCsv() {
     const filename: string = path.resolve('./', 'csv', 'laposte_hexasmal.csv');
     fs.createReadStream(filename)

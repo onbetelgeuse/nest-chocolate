@@ -7,11 +7,13 @@ import * as bodyParser from 'body-parser';
 import * as csurf from 'csurf';
 import * as helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
 export const BASE_PATH = 'api';
 
 async function bootstrap() {
-  const env = process.env.NODE_ENV;
+  const env = process.env.NODE_ENV || 'development';
 
   if (!env) {
     Logger.log('No NODE_ENV environment variable specified, exiting.');
@@ -41,5 +43,6 @@ async function bootstrap() {
 
   await app.listen(port);
   Logger.log(`Listening on http://localhost:${port}`);
+  Logger.log(process.env.NODE_ENV);
 }
 bootstrap();

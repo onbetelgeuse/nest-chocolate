@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import * as Joi from '@hapi/joi';
 import * as fs from 'fs';
-import { LdapAuthOptions } from './ldap-auth-options';
-import { OpenIdConnectAuthOptions } from './oidc-auth-options';
+import { LdapAuthOptions } from './ldap-auth.config';
+import { OpenIdConnectAuthOptions } from './oidc-auth.config';
 
 export interface EnvConfig {
   [key: string]: string;
@@ -74,6 +74,7 @@ export class ConfigService {
 
       REDIS_HOST: Joi.string().default('localhost'),
       REDIS_PORT: Joi.number().default(6379),
+      REDIS_DB: Joi.number().default(0),
     });
 
     const { error, value: validatedEnvConfig } = Joi.validate(

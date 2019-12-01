@@ -5,11 +5,12 @@ import {
   OnQueueEvent,
   BullQueueGlobalEvents,
 } from 'nest-bull';
-import { Logger, Injectable } from '@nestjs/common';
+import { Logger, Injectable, Scope } from '@nestjs/common';
 import { Job, DoneCallback } from 'bull';
+import { IMPORT_CSV_QUEUE } from './import.constants';
 
-@Injectable()
-@Processor({ name: 'import_csv' })
+@Injectable({ scope: Scope.DEFAULT })
+@Processor({ name: IMPORT_CSV_QUEUE })
 export class ImportProcessor {
   private readonly logger = new Logger(ImportProcessor.name);
 
