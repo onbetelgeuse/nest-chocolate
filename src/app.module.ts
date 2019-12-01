@@ -13,6 +13,7 @@ import { OwmaModule } from './owma/owma.module';
 import { ConfigService } from './config/config.service';
 import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
 import { ImportModule } from './import/import.module';
+import { CommuneModule } from './communes/commune.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { ImportModule } from './import/import.module';
     FileModule,
     OwmaModule,
     ImportModule,
+    CommuneModule,
   ],
   controllers: [AppController],
   providers: [AppService],

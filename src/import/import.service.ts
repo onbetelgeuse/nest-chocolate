@@ -1,8 +1,8 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as csv from 'csv-parser';
 import * as path from 'path';
 import * as fs from 'fs';
-import { InjectQueue, Processor } from 'nest-bull';
+import { InjectQueue } from 'nest-bull';
 import { Queue } from 'bull';
 import { IMPORT_CSV_QUEUE } from './import.constants';
 
