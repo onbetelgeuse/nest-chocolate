@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CommuneDto } from './dto/commune.dto';
 import { CommuneService } from './commune.service';
 
@@ -7,8 +7,8 @@ export class CommunesController {
   constructor(public readonly communeService: CommuneService) {}
 
   @Get()
-  public async findAll(): Promise<CommuneDto[]> {
-    return this.communeService.findAll();
+  public async findAll(@Query('q') term: string): Promise<CommuneDto[]> {
+    return this.communeService.search(term);
   }
 
   @Get(':code')

@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { CommuneRepository } from './commune.repository';
 import { CommuneDto } from './dto/commune.dto';
 import { Commune } from './commune.entity';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class CommuneService {
@@ -26,6 +27,21 @@ export class CommuneService {
   public async findAll(): Promise<CommuneDto[]> {
     const entities: Commune[] = await this.communeRepository.find();
     return entities.map(CommuneDto.fromEntity);
+  }
+
+  public async search(
+    term: string,
+    maxCount: number = 10,
+  ): Promise<CommuneDto[]> {
+    if (term) {
+      const entities: Commune[] = await this.communeRepository.find({
+        where: { name: Like(`%${term}%`) },
+        take: maxCount,
+        order: { name: 'ASC' },
+      });
+      return entities.map(CommuneDto.fromEntity);
+    }
+    return [];
   }
 
   public async save(commune: CommuneDto): Promise<void> {

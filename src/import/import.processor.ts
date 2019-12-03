@@ -5,6 +5,7 @@ import {
   OnQueueEvent,
   BullQueueGlobalEvents,
   OnQueueFailed,
+  BullQueueEvents,
 } from 'nest-bull';
 import { Logger, Injectable } from '@nestjs/common';
 import { Job, DoneCallback } from 'bull';
@@ -35,20 +36,27 @@ export class ImportProcessor {
   }
 
   @OnQueueActive()
-  public onActive(job: Job) {
-    this.logger.log(
-      `Processing job ${job.id} of type ${job.name} with data ${job.data}...`,
-    );
-  }
+  public onActive(job: Job) {}
 
   @OnQueueFailed()
   public onFailed(job: Job) {
     this.logger.error(
-      `Processing job ${job.id} of type ${job.name} with data ${job.data}...`,
+      `Processing job ${job.id} of type ${job.name} with data ${JSON.stringify(
+        job.data,
+      )}...`,
     );
   }
 
   @OnQueueEvent(BullQueueGlobalEvents.COMPLETED)
+  public onGlobalCompleted(job: Job) {
+    this.logger.log(
+      `Global Completed job ${job.id} of type ${job.name} with result ${
+        job.returnvalue
+      }`,
+    );
+  }
+
+  @OnQueueEvent(BullQueueEvents.COMPLETED)
   public onCompleted(job: Job) {
     this.logger.log(
       `Completed job ${job.id} of type ${job.name} with result ${

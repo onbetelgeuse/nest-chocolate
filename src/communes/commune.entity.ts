@@ -1,11 +1,12 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Unique } from 'typeorm';
 
 @Entity()
+@Unique(['code', 'name'])
 export class Commune {
   @PrimaryColumn()
   code: string;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @Column()

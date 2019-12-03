@@ -9,7 +9,16 @@ import { CommuneModule } from '../communes/commune.module';
 @Module({
   imports: [
     // forwardRef(() => QueueModule),
-    BullModule.register({ name: IMPORT_CSV_QUEUE }),
+    BullModule.register({
+      name: IMPORT_CSV_QUEUE,
+      options: {
+        redis: {
+          host: process.env.REDIS_HOST,
+          port: Number(process.env.REDIS_PORT) || 6379,
+          db: Number(process.env.REDIS_DB) || 0,
+        },
+      },
+    }),
     CommuneModule,
   ],
   providers: [ImportService, ImportProcessor],
