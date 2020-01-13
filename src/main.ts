@@ -36,13 +36,12 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: '90mb' }));
   app.use(bodyParser.urlencoded({ limit: '90mb', extended: false }));
   app.use(cookieParser());
-  app.use(helmet());
   // app.use(csurf({ cookie: true }));
+  app.use(helmet());
 
   app.setGlobalPrefix(BASE_PATH);
 
   await app.listen(port);
   Logger.log(`Listening on http://localhost:${port}`);
-  Logger.log(process.env.NODE_ENV);
 }
 bootstrap();

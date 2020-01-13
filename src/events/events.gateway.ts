@@ -5,8 +5,10 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
-import { Server, Client } from 'socket.io';
+import { Server, Client, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 
 @WebSocketGateway()
@@ -14,7 +16,7 @@ export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
-  private readonly logger: Logger = new Logger('EventsGateway');
+  private readonly logger: Logger = new Logger(EventsGateway.name);
 
   constructor() {}
 
@@ -31,7 +33,10 @@ export class EventsGateway
   }
 
   @SubscribeMessage('propertyChanged')
-  public handleMessage(client: Client, payload: any): string {
+  public handleMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: any,
+  ): string {
     this.logger.log(`Property changed: ${client.id}`);
     return 'Hello world!';
   }

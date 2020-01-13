@@ -27,8 +27,9 @@ export class AuthController {
   @Post('login')
   public async login(@Request() req: any, @Res() res: Response): Promise<void> {
     const accessToken: AccessToken = await this.authService.login(req.user);
-    res.cookie('AccessToken', accessToken, {
+    res.cookie('chlt', accessToken.token, {
       httpOnly: true,
+      secure: false,
       maxAge: accessToken.expiresIn * 1000,
     });
 
