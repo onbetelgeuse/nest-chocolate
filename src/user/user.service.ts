@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Role } from './role.entity';
@@ -7,9 +7,10 @@ import { CreateUserDto } from './../auth/dto/create.dto';
 
 @Injectable()
 export class UserService {
+  private readonly logger: Logger = new Logger(UserService.name);
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    private readonly logger: Logger,
+    @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
   ) {}
 
   public async findOneById(id: number): Promise<User | undefined> {
@@ -46,18 +47,11 @@ export class UserService {
   // }
 
   public async create(user: CreateUserDto): Promise<User> {
-    const newUser = this.userRepository.create();
-    newUser.username = user.username;
-    newUser.email = user.email;
-    newUser.firstName = user.firstName;
-    newUser.lastName = user.lastName;
-    newUser.setPassword(user.password);
-    newUser.externalId = null;
-    newUser.roles = (user.roles || []).map(name => {
-      const role = new Role();
-      role.name = name;
-      return role;
+    const entity: User = CreateUserDto.toEntity(user);
+    const roles: Role[] = await this.roleRepository.find({
+      where: { name: In(user.roles) },
     });
-    return this.userRepository.save(newUser);
+    entity.roles = roles;
+    return this.userRepository.save(entity);
   }
 }

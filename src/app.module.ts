@@ -12,6 +12,8 @@ import { EventsModule } from './events/events.module';
 import { OwmaModule } from './owma/owma.module';
 import { ConfigService } from './config/config.service';
 import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
+import { ImportModule } from './import/import.module';
+import { CommuneModule } from './communes/commune.module';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { LoggerOptions } from 'typeorm/logger/LoggerOptions';
     CommonModule,
     FileModule,
     OwmaModule,
+    ImportModule,
+    CommuneModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,10 +4,8 @@ import {
   FindManyOptions,
   EntityRepository,
   FindOneOptions,
-  FindConditions,
   DeleteResult,
 } from 'typeorm';
-import { User } from 'src/user/user.entity';
 
 @EntityRepository(File)
 export class FileRepository extends Repository<File> {

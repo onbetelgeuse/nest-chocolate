@@ -1,4 +1,4 @@
 export interface AccessToken {
-  expiresIn: number | string;
+  expiresIn: number;
   token: string;
 }

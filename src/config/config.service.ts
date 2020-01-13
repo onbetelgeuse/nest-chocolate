@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import * as Joi from '@hapi/joi';
 import * as fs from 'fs';
-import { LdapAuthOptions } from './ldap-auth-options';
-import { OpenIdConnectAuthOptions } from './oidc-auth-options';
+import { LdapAuthOptions } from './ldap-auth.config';
+import { OpenIdConnectAuthOptions } from './oidc-auth.config';
 
 export interface EnvConfig {
   [key: string]: string;
@@ -14,12 +14,14 @@ export class ConfigService {
   private readonly envConfig: { [key: string]: string };
 
   constructor(filePath: string) {
-    const config = dotenv.parse(fs.readFileSync(filePath));
+    const config = fs.existsSync(filePath)
+      ? dotenv.parse(fs.readFileSync(filePath))
+      : {};
     // CMD DOS LINUX
     // ssh-keygen -t rsa -b 4096 -f jwtRS256.key
     // ssh-keygen -f jwtRS256.key.pub -e -m pkcs8 >  jwtRS256.key.pub.pem
 
-    this.envConfig = this.validateInput(config);
+    this.envConfig = this.validateInput({ ...config, ...process.env });
   }
 
   //    Ensures all needed variables are set, and returns the validated JavaScript object
@@ -71,7 +73,11 @@ export class ConfigService {
       OWMA_APIKEY2: Joi.string().required(),
 
       MULTER_DEST: Joi.string().required(),
-    });
+
+      REDIS_HOST: Joi.string().default('localhost'),
+      REDIS_PORT: Joi.number().default(6379),
+      REDIS_DB: Joi.number().default(0),
+    }).options({ allowUnknown: true, convert: true });
 
     const { error, value: validatedEnvConfig } = Joi.validate(
       envConfig,

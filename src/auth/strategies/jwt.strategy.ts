@@ -5,6 +5,7 @@ import { ConfigService } from '../../config/config.service';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserDto } from '../../user/dto/user.dto';
+import { AccessToken } from '../interfaces/access-token.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -13,7 +14,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly configService: ConfigService,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: JwtStrategy.cookieExtractor,
       ignoreExpiration: false,
       secretOrKey: configService.jwtPublicKey,
       audience: configService.jwtAudience,
@@ -28,5 +30,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       done(new HttpException('Wrong credentials', 401), false);
     }
     done(null, UserDto.fromEntity(user), payload.iat);
+  }
+
+  private static cookieExtractor(req: any) {
+    let token: string;
+    if (req && req.cookies) {
+      token = req.cookies.chlt;
+    }
+    return token;
   }
 }
