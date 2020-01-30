@@ -13,8 +13,8 @@ import { CreateUserDto } from './dto/create.dto';
 import { UserDto } from './../user/dto/user.dto';
 import { AccessToken } from './interfaces/access-token.interface';
 import { AuthUtil } from './auth.util';
-import { TokenService } from '../tokens/token.service';
-import { TokenDto } from '../tokens/dto/token.dto';
+import { TokenSessionService } from '../token-session/token-session.service';
+import { TokenSessionDto } from '../token-session/dto/token-session.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
   constructor(
     private configService: ConfigService,
     private readonly userService: UserService,
-    private readonly tokenService: TokenService,
+    private readonly tokenService: TokenSessionService,
   ) {}
 
   public async login(user: UserDto): Promise<AccessToken> {
@@ -50,7 +50,7 @@ export class AuthService {
       issuer: this.configService.jwtIssuer,
       jwtid: AuthUtil.jitGenerate(),
     };
-    const token: TokenDto = new TokenDto({
+    const token: TokenSessionDto = new TokenSessionDto({
       id: signOptions.jwtid,
       userId: payload.id,
     });

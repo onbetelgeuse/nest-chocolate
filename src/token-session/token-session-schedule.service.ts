@@ -1,15 +1,17 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { Schedule, InjectSchedule } from 'nest-schedule';
-import { TokenService } from './token.service';
+import { TokenSessionService } from './token-session.service';
 import { DeleteResult } from 'typeorm';
 
 @Injectable()
-export class TokenScheduleService implements OnModuleInit {
-  private readonly logger: Logger = new Logger(TokenScheduleService.name);
+export class TokenSessionScheduleService implements OnModuleInit {
+  private readonly logger: Logger = new Logger(
+    TokenSessionScheduleService.name,
+  );
   private isCompleted: boolean = false;
   constructor(
     @InjectSchedule() private readonly schedule: Schedule,
-    private readonly tokenService: TokenService,
+    private readonly tokenService: TokenSessionService,
   ) {}
 
   public async onModuleInit() {

@@ -7,7 +7,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { FileModule } from './files/file.module';
-import { TokenModule } from './tokens/token.module';
+import { TokenSessionModule } from './token-session/token-session.module';
 import { EventsModule } from './events/events.module';
 import { OwmaModule } from './owma/owma.module';
 import { ConfigService } from './config/config.service';
@@ -20,7 +20,7 @@ import { CommuneModule } from './communes/commune.module';
     ConfigModule,
     AuthModule,
     UserModule,
-    TokenModule,
+    TokenSessionModule,
     EventsModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

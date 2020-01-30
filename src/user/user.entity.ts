@@ -16,7 +16,7 @@ import {
 } from 'class-validator';
 import { AuthUtil } from '../auth/auth.util';
 import { Role } from './role.entity';
-import { Token } from '../tokens/token.entity';
+import { TokenSession } from '../token-session/token-session.entity';
 import { File } from '../files/file.entity';
 @Injectable()
 @Entity('user')
@@ -58,8 +58,8 @@ export class User {
   @JoinTable({ name: 'user_role' })
   roles: Role[];
 
-  @OneToMany(type => Token, token => token.user)
-  tokens: Token[];
+  @OneToMany(type => TokenSession, token => token.user)
+  tokens: TokenSession[];
 
   public setPassword(password: string) {
     if (password) {

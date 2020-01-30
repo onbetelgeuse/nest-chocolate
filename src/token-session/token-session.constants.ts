@@ -1,0 +1,1 @@
+export const TOKEN_SESSION_SERVICE: string = 'TOKEN_SESSION_SERVICE';

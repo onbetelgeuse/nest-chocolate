@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 
-@Entity('token')
-export class Token {
+@Entity('token-session')
+export class TokenSession {
   @PrimaryColumn()
   id: string;
 
