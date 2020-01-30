@@ -1,11 +1,12 @@
-import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { TokenSessionRepository } from './token-session.repository';
 import { TokenSession } from './token-session.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenSessionDto } from './dto/token-session.dto';
 import * as moment from 'moment';
-import { LessThan, FindConditions, DeleteResult, MoreThan } from 'typeorm';
+import { LessThan, DeleteResult } from 'typeorm';
 import { ConfigService } from 'src/config/config.service';
+import { Utils } from '../common/common.util';
 
 @Injectable()
 export class TokenSessionService {
@@ -17,22 +18,25 @@ export class TokenSessionService {
     private readonly config: ConfigService,
   ) {}
 
-  public async findAll(): Promise<TokenSession[]> {
-    return this.tokenRepository.find();
+  public async findAll(): Promise<TokenSessionDto[]> {
+    const entities: TokenSession[] = await this.tokenRepository.find();
+    return entities.map(TokenSessionDto.fromEntity);
   }
 
-  public async add(token: TokenSessionDto): Promise<TokenSession> {
+  public async add(token: TokenSessionDto): Promise<TokenSessionDto> {
     const entity: TokenSession = TokenSessionDto.toEntity(token);
-    return this.tokenRepository.save(entity);
+    const result: TokenSession = await this.tokenRepository.save(entity);
+    return TokenSessionDto.fromEntity(result);
   }
 
-  public async cleanup(): Promise<DeleteResult> {
-    return this.tokenRepository.delete({
+  public async cleanup(): Promise<number> {
+    const result: DeleteResult = await this.tokenRepository.delete({
       createdAt: LessThan(
         moment()
-          .subtract(2, 'minutes')
+          .subtract(Utils.toSeconds(this.config.jwtExpire), 'seconds')
           .utc(),
       ),
     });
+    return result.affected;
   }
 }

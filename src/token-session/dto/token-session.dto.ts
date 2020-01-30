@@ -9,12 +9,16 @@ export class TokenSessionDto {
   }
 
   public static fromEntity(entity: TokenSession): TokenSessionDto {
-    return new TokenSessionDto({ id: entity.id, userId: entity.userId });
+    if (entity) {
+      return new TokenSessionDto({ id: entity.id, userId: entity.userId });
+    }
   }
 
-  public static toEntity(token: TokenSessionDto): TokenSession {
-    const entity: TokenSession = new TokenSession();
-    Object.assign(entity, token);
-    return entity;
+  public static toEntity(token: TokenSessionDto): TokenSession | null {
+    if (token) {
+      const entity: TokenSession = new TokenSession();
+      Object.assign(entity, token);
+      return entity;
+    }
   }
 }

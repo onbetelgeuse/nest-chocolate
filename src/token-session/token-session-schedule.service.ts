@@ -1,28 +1,48 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  Logger,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { Schedule, InjectSchedule } from 'nest-schedule';
 import { TokenSessionService } from './token-session.service';
-import { DeleteResult } from 'typeorm';
+import { ConfigService } from 'src/config/config.service';
+import { jobKey } from './token-session.constants';
 
 @Injectable()
-export class TokenSessionScheduleService implements OnModuleInit {
+export class TokenSessionScheduleService
+  implements OnModuleInit, OnModuleDestroy {
   private readonly logger: Logger = new Logger(
     TokenSessionScheduleService.name,
   );
   private isCompleted: boolean = false;
   constructor(
     @InjectSchedule() private readonly schedule: Schedule,
-    private readonly tokenService: TokenSessionService,
+    private readonly tokenSessionService: TokenSessionService,
+    private readonly config: ConfigService,
   ) {}
 
   public async onModuleInit() {
     this.schedule.scheduleCronJob(
-      'cleanup_token',
-      '0 0 */4 * * 1-5',
-      async (): Promise<boolean> => {
-        const deleteResult: DeleteResult = await this.tokenService.cleanup();
-        this.logger.log(deleteResult.affected + ' row(s) deleted');
-        return this.isCompleted;
+      jobKey,
+      this.config.cleanupTokenSessionCronJob,
+      async () => {
+        try {
+          const deletedRows: number = await this.tokenSessionService.cleanup();
+          this.logger.debug(
+            'CleanUp job : ' + deletedRows + ' row(s) deleted.',
+          );
+          return false;
+        } catch (error) {
+          this.logger.error('CleanUp job failed.', error.message);
+          throw error;
+        }
       },
+      { maxRetry: this.config.cleanupTokenSessionMaxRetry },
     );
+  }
+
+  public onModuleDestroy(): void {
+    this.schedule.cancelJob(jobKey);
   }
 }

@@ -77,6 +77,9 @@ export class ConfigService {
       REDIS_HOST: Joi.string().default('localhost'),
       REDIS_PORT: Joi.number().default(6379),
       REDIS_DB: Joi.number().default(0),
+
+      CLEANUP_TOKEN_SESSION_SCHEDULE_CRON_JOB: Joi.string().required(),
+      CLEANUP_TOKEN_SESSION_JOB_MAX_RETRY: Joi.number().default(1),
     }).options({ allowUnknown: true, convert: true });
 
     const { error, value: validatedEnvConfig } = Joi.validate(
@@ -145,6 +148,14 @@ export class ConfigService {
   }
   public get getOwmaApiKey2(): string {
     return this.envConfig.OWMA_APIKEY2;
+  }
+
+  public get cleanupTokenSessionCronJob(): string {
+    return String(this.envConfig.CLEANUP_TOKEN_SESSION_SCHEDULE_CRON_JOB);
+  }
+
+  public get cleanupTokenSessionMaxRetry(): number {
+    return Number(this.envConfig.CLEANUP_TOKEN_SESSION_JOB_MAX_RETRY);
   }
 
   public get ldapAuthOptions(): LdapAuthOptions {
