@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TokenSessionDto } from './dto/token-session.dto';
 import * as moment from 'moment';
 import { LessThan, DeleteResult } from 'typeorm';
-import { ConfigService } from 'src/config/config.service';
+import { ConfigService } from '../config/config.service';
 import { Utils } from '../common/common.util';
 
 @Injectable()

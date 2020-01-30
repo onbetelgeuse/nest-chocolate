@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Schedule, InjectSchedule } from 'nest-schedule';
 import { TokenSessionService } from './token-session.service';
-import { ConfigService } from 'src/config/config.service';
+import { ConfigService } from '../config/config.service';
 import { jobKey } from './token-session.constants';
 
 @Injectable()
