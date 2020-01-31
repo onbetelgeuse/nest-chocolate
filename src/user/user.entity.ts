@@ -17,7 +17,7 @@ import {
 import { AuthUtil } from '../auth/auth.util';
 import { Role } from './role.entity';
 import { TokenSession } from '../token-session/token-session.entity';
-import { File } from '../files/file.entity';
+import { File } from '../documents/document.entity';
 @Injectable()
 @Entity('user')
 export class User {

@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { LessThan, DeleteResult } from 'typeorm';
 import { ConfigService } from '../config/config.service';
 import { Utils } from '../common/common.util';
+import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class TokenSessionService {
@@ -21,6 +22,13 @@ export class TokenSessionService {
   public async findAll(): Promise<TokenSessionDto[]> {
     const entities: TokenSession[] = await this.tokenRepository.find();
     return entities.map(TokenSessionDto.fromEntity);
+  }
+
+  public async findByPayload(payload: JwtPayload): Promise<TokenSessionDto> {
+    const entity: TokenSession = await this.tokenRepository.findOne({
+      where: { id: payload.jti, userId: payload.id },
+    });
+    return TokenSessionDto.fromEntity(entity);
   }
 
   public async add(token: TokenSessionDto): Promise<TokenSessionDto> {

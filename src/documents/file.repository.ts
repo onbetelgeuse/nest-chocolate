@@ -1,4 +1,4 @@
-import { File } from './file.entity';
+import { File } from './document.entity';
 import {
   Repository,
   FindManyOptions,

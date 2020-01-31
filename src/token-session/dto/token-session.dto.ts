@@ -3,6 +3,7 @@ import { TokenSession } from '../token-session.entity';
 export class TokenSessionDto {
   public readonly id: string;
   public readonly userId: number;
+  public readonly revoked: boolean;
 
   constructor(values: Partial<TokenSessionDto>) {
     Object.assign(this, values);
@@ -10,7 +11,11 @@ export class TokenSessionDto {
 
   public static fromEntity(entity: TokenSession): TokenSessionDto {
     if (entity) {
-      return new TokenSessionDto({ id: entity.id, userId: entity.userId });
+      return new TokenSessionDto({
+        id: entity.id,
+        userId: entity.userId,
+        revoked: entity.revoked,
+      });
     }
   }
 

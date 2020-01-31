@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import * as uuid from 'uuid';
+import { uuid } from 'uuidv4';
 
 const BCRYPT_SALT_ROUNDS = 16;
 
@@ -13,6 +13,6 @@ export class AuthUtil {
   }
 
   public static jitGenerate(): string {
-    return uuid.v1();
+    return uuid();
   }
 }

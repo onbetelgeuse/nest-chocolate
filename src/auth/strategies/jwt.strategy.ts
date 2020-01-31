@@ -6,12 +6,14 @@ import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { UserDto } from '../../user/dto/user.dto';
 import { AccessToken } from '../interfaces/access-token.interface';
+import { TokenSessionService } from '../../token-session/token-session.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
+    private readonly tokenSessionService: TokenSessionService,
   ) {
     super({
       // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -26,7 +28,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   public async validate(payload: JwtPayload, done: VerifiedCallback) {
     const user = await this.authService.validatePayload(payload);
-    if (!user || !user.active) {
+    const token = await this.tokenSessionService.findByPayload(payload);
+    if (!user || !user.active || !token || token.revoked) {
       done(new HttpException('Wrong credentials', 401), false);
     }
     done(null, UserDto.fromEntity(user), payload.iat);

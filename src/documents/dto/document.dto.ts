@@ -1,6 +1,6 @@
-import { File } from '../file.entity';
+import { Document } from '../document.entity';
 
-export class FileDto {
+export class DocumentDto {
   constructor(
     public readonly filename: string,
     public readonly originalname: string,
@@ -12,16 +12,16 @@ export class FileDto {
     public readonly size: number,
   ) {}
 
-  public static fromEntity(file: File): FileDto {
-    return new FileDto(
-      file.filename,
-      file.originalname,
-      file.encoding,
-      file.mimetype,
-      file.destination,
-      file.fieldname,
-      file.path,
-      file.size,
+  public static fromEntity(doc: Document): DocumentDto {
+    return new DocumentDto(
+      doc.filename,
+      doc.originalname,
+      doc.encoding,
+      doc.mimetype,
+      doc.destination,
+      doc.fieldname,
+      doc.path,
+      doc.size,
     );
   }
 }

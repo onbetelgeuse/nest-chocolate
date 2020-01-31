@@ -1,8 +1,8 @@
 import { FilesService } from './files.service';
 import { FileRepository } from './file.repository';
 import { mock, instance, when, verify, anything } from 'ts-mockito';
-import { File } from './file.entity';
-import { FileDto } from './dto/file.dto';
+import { File } from './document.entity';
+import { DocumentDto } from './dto/document.dto';
 
 describe('FileService', () => {
   let service: FilesService;
@@ -37,7 +37,7 @@ describe('FileService', () => {
       // execute
       const results: File[] = await service.saveAllByUserId(
         userId,
-        files.map(FileDto.fromEntity),
+        files.map(DocumentDto.fromEntity),
       );
       // verify
       verify(repository.save(anything())).once();

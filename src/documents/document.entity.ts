@@ -10,7 +10,7 @@ import {
 import { User } from '../user/user.entity';
 
 @Entity()
-export class File {
+export class Document {
   @PrimaryColumn({ name: 'id' })
   public filename: string;
   @Column()

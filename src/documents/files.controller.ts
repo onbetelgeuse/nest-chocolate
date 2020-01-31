@@ -15,12 +15,13 @@ import {
 import { FilesService } from './files.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { FileDto } from './dto/file.dto';
+import { DocumentDto } from './dto/document.dto';
 import { User } from '../common/decorators/user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import * as fs from 'fs';
 import { ConfigService } from '../config/config.service';
+import { diskStorage} from 'multer';
 
 @Controller('files')
 export class FilesController {
@@ -32,9 +33,9 @@ export class FilesController {
 
   @Post('/upload')
   @UseGuards(AuthGuard())
-  @UseInterceptors(FilesInterceptor('file', 20))
+  @UseInterceptors(FilesInterceptor('file', 20,{storage: diskStorage({destination:})}))
   public async uploadFiles(
-    @UploadedFiles() files: FileDto[],
+    @UploadedFiles() files: DocumentDto[],
     @User('id') userId: number,
   ) {
     return this.filesService.saveAllByUserId(userId, files);
@@ -55,9 +56,9 @@ export class FilesController {
 
   @Get()
   @UseGuards(AuthGuard())
-  public async findAll(@User('id') id: number): Promise<FileDto[]> {
+  public async findAll(@User('id') id: number): Promise<DocumentDto[]> {
     const results = await this.filesService.findAllByUserId(id);
-    return results.map(FileDto.fromEntity);
+    return results.map(DocumentDto.fromEntity);
   }
 
   @Get(':filename')
@@ -65,10 +66,10 @@ export class FilesController {
   public async findOne(
     @User('id') id: number,
     @Param('filename') filename: string,
-  ): Promise<FileDto> {
+  ): Promise<DocumentDto> {
     try {
       const result = await this.filesService.findOneByUserId(id, filename);
-      return FileDto.fromEntity(result);
+      return DocumentDto.fromEntity(result);
     } catch (error) {
       this.logger.log(error.message);
       throw new HttpException('File is not found.', HttpStatus.NOT_FOUND);

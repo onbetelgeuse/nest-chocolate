@@ -67,7 +67,7 @@
     "rxjs": "^6.3.3",
     "ts-mockito": "^2.4.2",
     "typeorm": "^0.2.18",
-    "uuid": "^3.3.3"
+    "uuidv4": "^6.0.2"
   },
   "devDependencies": {
     "@nestjs/testing": "6.1.1",

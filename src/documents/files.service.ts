@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FileRepository } from './file.repository';
-import { File } from './file.entity';
+import { File } from './document.entity';
 import { User } from '../user/user.entity';
-import { FileDto } from './dto/file.dto';
+import { DocumentDto } from './dto/document.dto';
 import { DeleteResult } from 'typeorm';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class FilesService {
 
   public async saveAllByUserId(
     userId: number,
-    files: FileDto[],
+    files: DocumentDto[],
   ): Promise<File[]> {
     const entities: File[] = files.map(file => {
       const entity = new File();
