@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
-import { FileModule } from './documents/file.module';
+import { DocumentModule } from './documents/document.module';
 import { TokenSessionModule } from './token-session/token-session.module';
 import { EventsModule } from './events/events.module';
 import { OwmaModule } from './owma/owma.module';
@@ -39,7 +39,7 @@ import { CommuneModule } from './communes/commune.module';
       }),
     }),
     CommonModule,
-    FileModule,
+    DocumentModule,
     OwmaModule,
     ImportModule,
     CommuneModule,

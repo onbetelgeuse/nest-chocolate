@@ -12,7 +12,7 @@ import {
   HttpStatus,
   Res,
 } from '@nestjs/common';
-import { FilesService } from './files.service';
+import { DocumentsService } from './documents.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { DocumentDto } from './dto/document.dto';
@@ -21,19 +21,18 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import * as fs from 'fs';
 import { ConfigService } from '../config/config.service';
-import { diskStorage} from 'multer';
 
-@Controller('files')
+@Controller('documents')
 export class FilesController {
   private readonly logger = new Logger('FileController');
   constructor(
-    private readonly filesService: FilesService,
+    private readonly filesService: DocumentsService,
     private readonly configService: ConfigService,
   ) {}
 
   @Post('/upload')
   @UseGuards(AuthGuard())
-  @UseInterceptors(FilesInterceptor('file', 20,{storage: diskStorage({destination:})}))
+  @UseInterceptors(FilesInterceptor('file', 20))
   public async uploadFiles(
     @UploadedFiles() files: DocumentDto[],
     @User('id') userId: number,

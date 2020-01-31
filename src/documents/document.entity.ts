@@ -34,7 +34,7 @@ export class Document {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(type => User, user => user.files, { nullable: false })
+  @ManyToOne(type => User, user => user.documents, { nullable: false })
   @JoinColumn()
   user: User;
 }

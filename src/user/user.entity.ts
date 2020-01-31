@@ -17,7 +17,7 @@ import {
 import { AuthUtil } from '../auth/auth.util';
 import { Role } from './role.entity';
 import { TokenSession } from '../token-session/token-session.entity';
-import { File } from '../documents/document.entity';
+import { Document } from '../documents/document.entity';
 @Injectable()
 @Entity('user')
 export class User {
@@ -73,6 +73,6 @@ export class User {
     return AuthUtil.verifyPassword(data, this.password);
   }
 
-  @OneToMany(type => File, file => file.user)
-  files: File[];
+  @OneToMany(type => Document, doc => doc.user)
+  documents: Document[];
 }

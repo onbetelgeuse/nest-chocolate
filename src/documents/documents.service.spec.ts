@@ -1,16 +1,16 @@
-import { FilesService } from './files.service';
-import { FileRepository } from './file.repository';
+import { DocumentsService } from './documents.service';
+import { DocumentRepository } from './document.repository';
 import { mock, instance, when, verify, anything } from 'ts-mockito';
-import { File } from './document.entity';
+import { Document } from './document.entity';
 import { DocumentDto } from './dto/document.dto';
 
 describe('FileService', () => {
-  let service: FilesService;
-  let repository: FileRepository;
+  let service: DocumentsService;
+  let repository: DocumentRepository;
 
   beforeEach(() => {
-    repository = mock(FileRepository);
-    service = new FilesService(instance(repository));
+    repository = mock(DocumentRepository);
+    service = new DocumentsService(instance(repository));
   });
 
   describe('A) Nominal case', () => {
@@ -24,7 +24,7 @@ describe('FileService', () => {
       const userId: number = 28;
       when(repository.findAllByUserId(userId)).thenResolve(files);
       // execute
-      const results: File[] = await service.findAllByUserId(userId);
+      const results: Document[] = await service.findAllByUserId(userId);
       // verify
       verify(repository.findAllByUserId(userId)).once();
       expect(results).toStrictEqual(files);
@@ -35,7 +35,7 @@ describe('FileService', () => {
       const userId: number = 28;
       when(repository.save(anything())).thenResolve(files);
       // execute
-      const results: File[] = await service.saveAllByUserId(
+      const results: Document[] = await service.saveAllByUserId(
         userId,
         files.map(DocumentDto.fromEntity),
       );
@@ -46,8 +46,8 @@ describe('FileService', () => {
   });
 });
 
-const files: File[] = [1, 2, 3].map(x => {
-  const file: File = new File();
+const files: Document[] = [1, 2, 3].map(x => {
+  const file: Document = new Document();
   file.filename = `xxxx-xxxx-xxx${x}`;
   file.fieldname = 'file';
   file.mimetype = 'image/jpeg';
