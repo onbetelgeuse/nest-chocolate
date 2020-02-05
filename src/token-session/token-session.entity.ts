@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 
-@Entity('token-session')
+@Entity()
 export class TokenSession {
   @PrimaryColumn()
   id: string;

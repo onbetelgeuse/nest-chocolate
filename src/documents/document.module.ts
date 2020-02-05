@@ -8,9 +8,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DocumentRepository } from './document.repository';
 import { diskStorage } from 'multer';
-import { existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
-import { originalname } from './document.utils';
+import { Utils } from './document.utils';
 
 @Module({
   imports: [
@@ -21,18 +19,15 @@ import { originalname } from './document.utils';
       useFactory: async (configService: ConfigService) => ({
         storage: diskStorage({
           destination(req, file, callback): void {
-            const dest: string = join(
+            Utils.destination(
+              req,
+              file,
+              callback,
               configService.get('MULTER_DEST'),
-              String(req.user.id),
             );
-            if (!existsSync(dest)) {
-              mkdirSync(dest);
-            }
-
-            callback(null, dest);
           },
           filename(req, file, callback): void {
-            callback(null, originalname(file));
+            Utils.filename(req, file, callback);
           },
         }),
       }),
