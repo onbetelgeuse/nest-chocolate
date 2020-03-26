@@ -1,12 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { Entity, ManyToMany, PrimaryColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity('role')
 export class Role {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ length: 200, unique: true, nullable: false })
+  @PrimaryColumn()
   name: string;
 
   @ManyToMany(type => User, user => user.roles)

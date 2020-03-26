@@ -1,36 +1,43 @@
 import { Module } from '@nestjs/common';
 import { ImportController } from './import.controller';
-import { ImportService } from './import.service';
-import { ImportProcessor } from './import.processor';
-import { BullModule } from 'nest-bull';
-import { IMPORT_CSV_QUEUE } from './import.constants';
+import { ImportConsumer } from './import.consumer';
 import { CommuneModule } from '../communes/commune.module';
+import {
+  BullModule,
+  BullModuleOptions,
+  BullModuleAsyncOptions,
+} from '@nestjs/bull';
+import { IMPORT_CSV_QUEUE } from './import.constants';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-// import { ImportQueue } from './import.queue';
+import { ImportService } from './import.service';
+
+function redisOptions(config: ConfigService) {
+  return {
+    host: config.get('REDIS_HOST'),
+    port: config.get<number>('REDIS_PORT'),
+    db: config.get<number>('REDIS_DB'),
+    name: IMPORT_CSV_QUEUE,
+  };
+}
 
 @Module({
-  // imports: [
-  //   BullModule.registerAsync([
-  //     {
-  //       imports: [ConfigModule],
-  //       inject: [ConfigService],
-  //       useFactory: (config: ConfigService) => ({
-  //         // queue: ImportQueue,
-  //         options: {
-  //           redis: {
-  //             host: config.get('REDIS_HOST'),
-  //             port: config.get<number>('REDIS_PORT'),
-  //             db: config.get<number>('REDIS_DB'),
-  //           },
-  //         },
-  //       }),
-  //     },
-  //   ]),
-  //   CommuneModule,
-  // ],
-  // providers: [ImportProcessor, ImportService],
-  // controllers: [ImportController],
-  // exports: [ImportService],
+  imports: [
+    CommuneModule,
+    BullModule.registerQueueAsync({
+      name: IMPORT_CSV_QUEUE,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (
+        config: ConfigService,
+      ): Promise<BullModuleOptions> => ({
+        name: IMPORT_CSV_QUEUE,
+        redis: redisOptions(config),
+      }),
+    } as BullModuleAsyncOptions),
+  ],
+  providers: [ImportConsumer, ImportService],
+  controllers: [ImportController],
+  exports: [],
 })
 export class ImportModule {}

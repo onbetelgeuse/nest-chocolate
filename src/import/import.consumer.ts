@@ -1,24 +1,27 @@
 import {
   Processor,
   Process,
-  OnQueueActive,
   OnQueueEvent,
   BullQueueGlobalEvents,
   OnQueueFailed,
   BullQueueEvents,
-} from 'nest-bull';
+} from '@nestjs/bull';
 import { Logger, Injectable } from '@nestjs/common';
 import { Job, DoneCallback } from 'bull';
 import { IMPORT_CSV_QUEUE } from './import.constants';
 import { CommuneService } from '../communes/commune.service';
 import { CommuneDto } from '../communes/dto/commune.dto';
 
-@Injectable()
-@Processor({ name: IMPORT_CSV_QUEUE })
-export class ImportProcessor {
-  private readonly logger = new Logger(ImportProcessor.name);
+@Processor(IMPORT_CSV_QUEUE)
+export class ImportConsumer {
+  private readonly logger = new Logger(ImportConsumer.name);
 
   constructor(private readonly communeService: CommuneService) {}
+
+  @Process({ name: 'hello' })
+  handleHelloJob(job: Job) {
+    this.logger.log(job.data);
+  }
 
   @Process({ name: 'postalCode' })
   public async processPostalCode(
@@ -34,9 +37,6 @@ export class ImportProcessor {
       callback(error, job.id);
     }
   }
-
-  @OnQueueActive()
-  public onActive(job: Job) {}
 
   @OnQueueFailed()
   public onFailed(job: Job) {
